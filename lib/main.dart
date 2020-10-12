@@ -8,6 +8,7 @@ void main() {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => MainResponseWindow()),
+        ChangeNotifierProvider(create: (_) => MainRequestWindow()),
         ChangeNotifierProvider(create: (_) => PictureWindow()),
       ],
       child: MyApp(),
@@ -26,9 +27,25 @@ class MainResponseWindow with ChangeNotifier {
   }
 }
 
+class MainRequestWindow with ChangeNotifier {
+  String _requestText = "";
+
+  String get requestText => _requestText;
+
+  void updateRequestWindow(request) {
+    _requestText = request;
+    notifyListeners();
+  }
+}
+
 class PictureWindow with ChangeNotifier {
   bool _showPicture = false;
   bool get showPicture => _showPicture;
+
+  void hidePicture() {
+    _showPicture = false;
+    notifyListeners();
+  }
 
   void togglePicture() {
     _showPicture = !_showPicture;
@@ -68,6 +85,10 @@ class MyHomePage extends StatelessWidget {
                     context
                         .read<MainResponseWindow>()
                         .updateResponseWindow(responseBody);
+
+                    context
+                        .read<MainRequestWindow>()
+                        .updateRequestWindow('${fullResponse.request}');
                   },
                   child: Text('get single todo'),
                 ),
@@ -80,14 +101,58 @@ class MyHomePage extends StatelessWidget {
                     context
                         .read<MainResponseWindow>()
                         .updateResponseWindow(responseBody);
+                    context
+                        .read<MainRequestWindow>()
+                        .updateRequestWindow('${fullResponse.request}');
                   },
                   child: Text('users'),
                 ),
                 RaisedButton(
                   onPressed: () {
                     context.read<PictureWindow>().togglePicture();
+                    context.read<MainRequestWindow>().updateRequestWindow('');
+                    context.read<MainResponseWindow>().updateResponseWindow('');
                   },
                   child: Text('toggle picture'),
+                ),
+                RaisedButton(
+                  onPressed: () {
+                    context.read<PictureWindow>().hidePicture();
+                    context.read<MainRequestWindow>().updateRequestWindow('');
+                    context.read<MainResponseWindow>().updateResponseWindow('');
+                  },
+                  child: Text('clear windows'),
+                )
+              ],
+            ),
+            Row(
+              children: [
+                Container(
+                  width: 300.0,
+                  child: Center(
+                    child: (Text(
+                      'Request',
+                      style: TextStyle(fontSize: 28),
+                    )),
+                  ),
+                ),
+                Container(
+                  width: 300.0,
+                  child: Center(
+                    child: (Text(
+                      'Response',
+                      style: TextStyle(fontSize: 28),
+                    )),
+                  ),
+                ),
+                Container(
+                  width: 300.0,
+                  child: Center(
+                    child: (Text(
+                      'Photos',
+                      style: TextStyle(fontSize: 28),
+                    )),
+                  ),
                 ),
               ],
             ),
@@ -95,7 +160,14 @@ class MyHomePage extends StatelessWidget {
               child: Row(
                 children: [
                   Container(
-                    width: 400.0,
+                    width: 300.0,
+                    child: SingleChildScrollView(
+                      child: Text(
+                          Provider.of<MainRequestWindow>(context).requestText),
+                    ),
+                  ),
+                  Container(
+                    width: 300.0,
                     child: SingleChildScrollView(
                       child: Text(Provider.of<MainResponseWindow>(context)
                           .responseText),
