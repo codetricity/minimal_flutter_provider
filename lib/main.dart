@@ -8,6 +8,7 @@ void main() {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => MainResponseWindow()),
+        ChangeNotifierProvider(create: (_) => PictureWindow()),
       ],
       child: MyApp(),
     ),
@@ -16,10 +17,21 @@ void main() {
 
 class MainResponseWindow with ChangeNotifier {
   String _responseText = "";
+
   String get responseText => _responseText;
 
   void updateResponseWindow(response) {
     _responseText = response;
+    notifyListeners();
+  }
+}
+
+class PictureWindow with ChangeNotifier {
+  bool _showPicture = false;
+  bool get showPicture => _showPicture;
+
+  void togglePicture() {
+    _showPicture = !_showPicture;
     notifyListeners();
   }
 }
@@ -63,6 +75,7 @@ class MyHomePage extends StatelessWidget {
                   onPressed: () async {
                     var url = 'https://jsonplaceholder.typicode.com/users';
                     var fullResponse = await http.get(url);
+                    print(fullResponse.request);
                     String responseBody = fullResponse.body;
                     context
                         .read<MainResponseWindow>()
@@ -70,17 +83,65 @@ class MyHomePage extends StatelessWidget {
                   },
                   child: Text('users'),
                 ),
+                RaisedButton(
+                  onPressed: () {
+                    context.read<PictureWindow>().togglePicture();
+                  },
+                  child: Text('toggle picture'),
+                ),
               ],
             ),
             Expanded(
-              child: SingleChildScrollView(
-                child:
-                    Text(Provider.of<MainResponseWindow>(context).responseText),
+              child: Row(
+                children: [
+                  Container(
+                    width: 400.0,
+                    child: SingleChildScrollView(
+                      child: Text(Provider.of<MainResponseWindow>(context)
+                          .responseText),
+                    ),
+                  ),
+                  Provider.of<PictureWindow>(context).showPicture
+                      ? MainPictureWindow()
+                      : Container(),
+                ],
               ),
             ),
           ],
         ),
       ),
+    );
+  }
+}
+
+class MainPictureWindow extends StatelessWidget {
+  const MainPictureWindow({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 300.0,
+      child: ListView(children: [
+        Image.network('https://picsum.photos/400/200?random=1'),
+        SizedBox(
+          height: 12.0,
+        ),
+        Image.network('https://picsum.photos/400/200?random=2'),
+        SizedBox(
+          height: 12.0,
+        ),
+        Image.network('https://picsum.photos/400/200?random=3'),
+        SizedBox(
+          height: 12.0,
+        ),
+        Image.network('https://picsum.photos/400/200?random=4'),
+        SizedBox(
+          height: 12.0,
+        ),
+        Image.network('https://picsum.photos/400/200?random=5'),
+      ]),
     );
   }
 }
