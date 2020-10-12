@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
 
 void main() {
   runApp(
@@ -45,13 +46,15 @@ class MyHomePage extends StatelessWidget {
         child: Column(
           children: <Widget>[
             RaisedButton(
-              onPressed: () {
-                String responseBody = "body of response";
+              onPressed: () async {
+                var url = 'https://jsonplaceholder.typicode.com/todos/1';
+                var fullResponse = await http.get(url);
+                String responseBody = fullResponse.body;
                 context
                     .read<MainResponseWindow>()
                     .updateResponseWindow(responseBody);
               },
-              child: Text('take picture'),
+              child: Text('get single todo'),
             ),
             Text(Provider.of<MainResponseWindow>(context).responseText),
           ],

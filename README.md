@@ -1,2 +1,3 @@
-# minimal flutter example of provider
+# minimal flutter example of provider with http package
+
 
