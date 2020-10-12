@@ -1,5 +1,7 @@
 # flutter example of provider with multiple http calls
 
+![full app](doc/image/full_app.gif)
+
 ## SingleChildScroll view inside of Expanded
 
 ![scrolling](doc/image/scrolling.gif)

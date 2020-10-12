@@ -158,6 +158,7 @@ class MyHomePage extends StatelessWidget {
             ),
             Expanded(
               child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
                     width: 300.0,
