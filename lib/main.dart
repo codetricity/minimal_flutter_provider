@@ -45,18 +45,39 @@ class MyHomePage extends StatelessWidget {
       body: Center(
         child: Column(
           children: <Widget>[
-            RaisedButton(
-              onPressed: () async {
-                var url = 'https://jsonplaceholder.typicode.com/todos/1';
-                var fullResponse = await http.get(url);
-                String responseBody = fullResponse.body;
-                context
-                    .read<MainResponseWindow>()
-                    .updateResponseWindow(responseBody);
-              },
-              child: Text('get single todo'),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                RaisedButton(
+                  onPressed: () async {
+                    var url = 'https://jsonplaceholder.typicode.com/todos/1';
+                    var fullResponse = await http.get(url);
+                    String responseBody = fullResponse.body;
+                    context
+                        .read<MainResponseWindow>()
+                        .updateResponseWindow(responseBody);
+                  },
+                  child: Text('get single todo'),
+                ),
+                RaisedButton(
+                  onPressed: () async {
+                    var url = 'https://jsonplaceholder.typicode.com/users';
+                    var fullResponse = await http.get(url);
+                    String responseBody = fullResponse.body;
+                    context
+                        .read<MainResponseWindow>()
+                        .updateResponseWindow(responseBody);
+                  },
+                  child: Text('users'),
+                ),
+              ],
             ),
-            Text(Provider.of<MainResponseWindow>(context).responseText),
+            Expanded(
+              child: SingleChildScrollView(
+                child:
+                    Text(Provider.of<MainResponseWindow>(context).responseText),
+              ),
+            ),
           ],
         ),
       ),
