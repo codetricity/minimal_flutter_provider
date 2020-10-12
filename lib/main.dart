@@ -43,8 +43,6 @@ class MyHomePage extends StatelessWidget {
       ),
       body: Center(
         child: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             RaisedButton(
               onPressed: () {
@@ -55,21 +53,10 @@ class MyHomePage extends StatelessWidget {
               },
               child: Text('take picture'),
             ),
-            const ResponseView(),
+            Text(Provider.of<MainResponseWindow>(context).responseText),
           ],
         ),
       ),
-    );
-  }
-}
-
-class ResponseView extends StatelessWidget {
-  const ResponseView({Key key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Text('${context.watch<MainResponseWindow>().responseText}'),
     );
   }
 }
